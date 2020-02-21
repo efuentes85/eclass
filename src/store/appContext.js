@@ -3,14 +3,6 @@ import React, { useState, useEffect } from "react";
 // Objeto que va a tener la llamada a la API
 const AppContext = React.createContext({});
 
-
-export function 
-
-
-
-
-
-
 export default AppContext;
 
 // import getState from "./flux.js";
