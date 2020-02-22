@@ -4,12 +4,19 @@ import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 
+/**
+ * Componente Home
+ * Aqui es donde se carga toda la informnacion y se renderiza en index.js
+ */
+
 export default function Home() {
 	const [isLoading, setisLoading] = useState(true);
 	const [currency, setCurrency] = useState({
 		quotes: { USDARS: 0, USDCLP: 0, USDCOP: 0, USDMXN: 0, USDPYG: 0 },
-		timestamp: ""
+		timestamp: 0
 	});
+
+	/** Ocupando useEffect, cargué la API con los valores de cada moneda */
 
 	useEffect(() => {
 		fetch(
@@ -30,6 +37,8 @@ export default function Home() {
 			})
 			.catch(error => console.log(error));
 	}, [isLoading]);
+
+	/** Esta función la implementé para calcular la hora y fecha utilizando el Unix timestamp */
 
 	function timeConverter(UNIX_timestamp) {
 		var a = new Date(UNIX_timestamp * 1000);
@@ -53,7 +62,8 @@ export default function Home() {
 		var hour = a.getHours();
 		var min = a.getMinutes() < 10 ? "0" + a.getMinutes() : a.getMinutes();
 		// var sec = a.getSeconds() < 10 ? "0" + a.getSeconds() : a.getSeconds();
-		var time = date + " " + month + " " + year + " " + hour + ":" + min;
+		var time =
+			date + " " + month + " " + year + " " + hour + ":" + min + " GMT-3";
 
 		return time;
 	}
@@ -62,7 +72,7 @@ export default function Home() {
 		<div className="container">
 			{isLoading ? (
 				<ButtonToolbar>
-					<Button variant="danger" disabled>
+					<Button variant="success" disabled block>
 						<Spinner
 							as="span"
 							animation="border"
