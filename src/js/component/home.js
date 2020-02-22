@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
+import Spinner from "react-bootstrap/Spinner";
+import Button from "react-bootstrap/Button";
+import Table from "react-bootstrap/Table";
+import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 
 export default function Home() {
-	const [search, setSearch] = useState("");
 	const [isLoading, setisLoading] = useState(true);
 	const [currency, setCurrency] = useState({
 		quotes: { USDARS: 0, USDCLP: 0, USDCOP: 0, USDMXN: 0, USDPYG: 0 },
@@ -23,7 +26,6 @@ export default function Home() {
 			.then(response => {
 				let { timestamp, quotes } = response;
 				setCurrency({ timestamp, quotes });
-				console.log(currency);
 				setisLoading(false);
 			})
 			.catch(error => console.log(error));
@@ -50,56 +52,110 @@ export default function Home() {
 		var date = a.getDate();
 		var hour = a.getHours();
 		var min = a.getMinutes() < 10 ? "0" + a.getMinutes() : a.getMinutes();
-		var sec = a.getSeconds() < 10 ? "0" + a.getSeconds() : a.getSeconds();
-		var time =
-			date +
-			" " +
-			month +
-			" " +
-			year +
-			" " +
-			hour +
-			":" +
-			min +
-			":" +
-			sec;
+		// var sec = a.getSeconds() < 10 ? "0" + a.getSeconds() : a.getSeconds();
+		var time = date + " " + month + " " + year + " " + hour + ":" + min;
 
 		return time;
 	}
 
 	return (
-		<div>
-			<form
-				onSubmit={e => {
-					e.preventDefault();
-				}}>
-				{isLoading ? (
-					<h1>Loading values</h1>
-				) : (
-					<div>
-						<h1>
-							Valor del Dolar al dia :{" "}
-							{timeConverter(currency.timestamp)}
-						</h1>
-					</div>
-				)}
+		<div className="container">
+			{isLoading ? (
+				<ButtonToolbar>
+					<Button variant="danger" disabled>
+						<Spinner
+							as="span"
+							animation="border"
+							size="lg"
+							role="status"
+							aria-hidden="true"
+						/>
+						<h1>Cargando</h1>
+						<span className="sr-only">Loading...</span>
+					</Button>
+				</ButtonToolbar>
+			) : (
 				<div>
-					Argentina : {currency.quotes["USDARS"]}
-					<br />
-					Chile : {currency.quotes["USDCLP"]}
-					<br />
-					Colombia : {currency.quotes["USDCOP"]}
-					<br />
-					Mexico : {currency.quotes["USDMXN"]}
-					<br />
-					Paraguay : {currency.quotes["USDPYG"]}
-					<br />
+					<h1>
+						Valor del Dolar al dia :{" "}
+						{timeConverter(currency.timestamp)}
+					</h1>
+					<div>
+						<Table striped bordered hover variant="dark">
+							<thead>
+								<tr>
+									<th></th>
+									<th>Pais</th>
+									<th>Moneda</th>
+									<th>Valor Dolar</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<img src="https://cdn3.iconfinder.com/data/icons/142-mini-country-flags-16x16px/32/flag-argentina2x.png" />
+									</td>
+									<td>Argentina</td>
+									<td>Peso Argentino</td>
+									<td>
+										${" "}
+										{Math.round(currency.quotes["USDARS"])}
+									</td>
+								</tr>
+
+								<tr>
+									<td>
+										<img src="https://cdn3.iconfinder.com/data/icons/142-mini-country-flags-16x16px/32/flag-chile2x.png" />
+									</td>
+									<td>Chile</td>
+									<td>Peso Chileno</td>
+									<td>
+										${" "}
+										{Math.round(currency.quotes["USDCLP"])}
+									</td>
+								</tr>
+
+								<tr>
+									<td>
+										<img src="https://cdn3.iconfinder.com/data/icons/142-mini-country-flags-16x16px/32/flag-colombia2x.png" />
+									</td>
+									<td>Colombia</td>
+									<td>Peso Colombiano</td>
+									<td>
+										${" "}
+										{Math.round(currency.quotes["USDCOP"])}
+									</td>
+								</tr>
+
+								<tr>
+									<td>
+										<img src="https://cdn3.iconfinder.com/data/icons/142-mini-country-flags-16x16px/32/flag-mexico2x.png" />
+									</td>
+									<td>Mexico</td>
+									<td>Peso Mexicano</td>
+									<td>
+										${" "}
+										{Math.round(currency.quotes["USDMXN"])}
+									</td>
+								</tr>
+
+								<tr>
+									<td>
+										<img src="https://cdn3.iconfinder.com/data/icons/142-mini-country-flags-16x16px/32/flag-paraguay2x.png" />
+									</td>
+									<td>Paraguay</td>
+									<td>Guaraní Paraguayo</td>
+									<td>
+										${" "}
+										{Math.round(currency.quotes["USDPYG"])}
+									</td>
+								</tr>
+							</tbody>
+						</Table>
+						<br />
+					</div>
 				</div>
-
-				<br />
-
-				<button type="submit">Actualizar Valor Dolar</button>
-			</form>
+			)}
 		</div>
 	);
 }
